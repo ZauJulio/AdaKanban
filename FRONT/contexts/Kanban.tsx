@@ -5,6 +5,7 @@ import { useToast } from "@chakra-ui/react";
 import { CardType, LISTAS } from "@/types";
 import { useAuth } from "@/hooks";
 import { APIClient } from "@/services";
+import { useEffect } from "react";
 
 export interface IKanbanContext {
   items: CardType[];
@@ -37,6 +38,28 @@ export function KanbanContextProvider(props: KanbanContextProviderProps) {
   const toast = useToast();
   const { token } = useAuth();
 
+  useEffect(() => {
+    if (!token) return;
+
+    APIClient({
+      method: "GET",
+      resource: "cards",
+      token,
+    })
+      .then((data) => setCards(data))
+      .catch((err) => {
+        toast({
+          title: "Erro ao carregar cards!",
+          description: err.message,
+          status: "error",
+          position: "top-right",
+          duration: 5000,
+          isClosable: true,
+        });
+      });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [token]);
+
   const getCard = (id: string) => cards.find((card) => card.id === id);
 
   const getCardIndex = (id: string) =>
@@ -57,7 +80,7 @@ export function KanbanContextProvider(props: KanbanContextProviderProps) {
           title: "Erro ao criar card!",
           description: err.message,
           status: "error",
-          position: 'top-right',
+          position: "top-right",
           duration: 5000,
           isClosable: true,
         });
@@ -85,7 +108,7 @@ export function KanbanContextProvider(props: KanbanContextProviderProps) {
           title: "Erro ao atualizar card!",
           description: err.message,
           status: "error",
-          position: 'top-right',
+          position: "top-right",
           duration: 5000,
           isClosable: true,
         });
@@ -104,7 +127,7 @@ export function KanbanContextProvider(props: KanbanContextProviderProps) {
           title: "Erro ao apagar card!",
           description: err.message,
           status: "error",
-          position: 'top-right',
+          position: "top-right",
           duration: 5000,
           isClosable: true,
         });
@@ -134,7 +157,7 @@ export function KanbanContextProvider(props: KanbanContextProviderProps) {
           title: "Erro ao mover card!",
           description: err.message,
           status: "error",
-          position: 'top-right',
+          position: "top-right",
           duration: 5000,
           isClosable: true,
         });
@@ -171,7 +194,7 @@ export function KanbanContextProvider(props: KanbanContextProviderProps) {
           title: "Erro ao mover card!",
           description: err.message,
           status: "error",
-          position: 'top-right',
+          position: "top-right",
           duration: 5000,
           isClosable: true,
         });
