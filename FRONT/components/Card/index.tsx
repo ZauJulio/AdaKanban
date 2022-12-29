@@ -1,5 +1,5 @@
 import { CSS } from "@dnd-kit/utilities";
-import { Flex, Text } from "@chakra-ui/react";
+import { Flex, Text, useToken } from "@chakra-ui/react";
 import { useDraggable } from "@dnd-kit/core";
 
 import { AiFillEdit } from "react-icons/ai";
@@ -22,6 +22,8 @@ export interface KanbanCardProps {
 
 export default function KanbanCard(props: KanbanCardProps) {
   const { id, lista, titulo, conteudo } = props;
+
+  const [darkT100, cyan100] = useToken("colors", ["darkT.100", "cyan.100"]);
 
   const { editCard, deleteCard, moveCard } = useKanban();
   const { attributes, listeners, setNodeRef, transform } = useDraggable({
@@ -48,7 +50,7 @@ export default function KanbanCard(props: KanbanCardProps) {
         margin="2"
         borderRadius="8"
         border="2px solid gray.500"
-        boxShadow="0px 0px 5px 2px #2121213b"
+        boxShadow={`0px 0px 5px 2px ${darkT100}`}
         {...listeners}
         {...attributes}
         ref={setNodeRef}
@@ -70,17 +72,17 @@ export default function KanbanCard(props: KanbanCardProps) {
             position="absolute"
             right="0.2rem"
             bgColor="transparent"
-            color="#2C7A7B"
+            color={cyan100}
             padding={0}
-            _hover={{ bgColor: "transparent" }}
-            _focus={{ bgColor: "transparent" }}
+            _hover={{ bgColor: "blackAlpha.200" }}
+            _focus={{ bgColor: "blackAlpha.200" }}
             onClick={() => editCard(id)}
           >
             <AiFillEdit />
           </ButtonIcon>
         </Flex>
 
-        <Flex border="1px solid #2121213b" borderRadius="8" width="100%" />
+        <Flex border={`1px solid ${darkT100}`} borderRadius="8" width="100%" />
 
         <MarkdownContainer content={conteudo} />
       </Flex>
@@ -96,7 +98,7 @@ export default function KanbanCard(props: KanbanCardProps) {
         padding="2"
         borderRadius="8"
         border="2px solid gray.500"
-        boxShadow="0px 0px 5px 2px #2121213b"
+        boxShadow={`0px 0px 5px 2px ${darkT100}`}
       >
         {lista === "ToDo" ? (
           <Flex />

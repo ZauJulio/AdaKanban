@@ -16,7 +16,7 @@ export default function KanbanLane({ titulo, items }: KanbanLaneProps) {
   });
 
   return (
-    <Flex flex="3" padding="5" flexDirection="column" minH="10rem">
+    <Flex flex="3" padding="5" flexDirection="column" minH="20rem" minW="15rem">
       <Text fontWeight="bold">{titulo}</Text>
 
       <Flex

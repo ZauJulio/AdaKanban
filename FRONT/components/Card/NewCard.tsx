@@ -1,6 +1,13 @@
 import { useState, useEffect } from "react";
 
-import { Flex, Text, Input, Textarea, Button } from "@chakra-ui/react";
+import {
+  Flex,
+  Text,
+  Input,
+  Textarea,
+  Button,
+  useToken,
+} from "@chakra-ui/react";
 import { IoIosAddCircle } from "react-icons/io";
 import { GiCancel } from "react-icons/gi";
 
@@ -14,6 +21,11 @@ export interface NewCardProps {
 export default function AddCard(props: NewCardProps) {
   const { addCard } = props;
 
+  const [red400, green500, cyan200] = useToken("colors", [
+    "red.400",
+    "green.500",
+    "cyan.200",
+  ]);
   const { updateCard, selectedCard, deselectCard } = useKanban();
 
   const [titulo, setTitle] = useState<string>(
@@ -47,7 +59,13 @@ export default function AddCard(props: NewCardProps) {
   };
 
   return (
-    <Flex w="30%" p="5" alignItems="center" direction="column" gap="1rem">
+    <Flex
+      width={{ base: "100%", lg: "30%" }}
+      padding="5"
+      alignItems="center"
+      direction="column"
+      gap="1rem"
+    >
       <Text flex="1" textAlign="center">
         {selectedCard === null ? "Adicionar Card" : "Editar Card"}
       </Text>
@@ -55,6 +73,7 @@ export default function AddCard(props: NewCardProps) {
       <Input
         type="text"
         flex="1"
+        padding="0.5rem"
         onChange={(e) => setTitle(e.target.value)}
         value={titulo}
         placeholder="Título"
@@ -78,7 +97,7 @@ export default function AddCard(props: NewCardProps) {
             onClick={deselectCard}
             _hover={{ bgColor: "transparent" }}
           >
-            <GiCancel size="3rem" color="#F56565" />
+            <GiCancel size="3rem" color={red400} />
           </Button>
         )}
 
@@ -93,9 +112,9 @@ export default function AddCard(props: NewCardProps) {
           _hover={{ bgColor: "transparent" }}
         >
           {selectedCard ? (
-            <AiFillCheckCircle size="3rem" color="#48BB78" />
+            <AiFillCheckCircle size="3rem" color={green500} />
           ) : (
-            <IoIosAddCircle size="3rem" color="#256D85" />
+            <IoIosAddCircle size="3rem" color={cyan200} />
           )}
         </Button>
       </Flex>
