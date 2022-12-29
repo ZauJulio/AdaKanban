@@ -1,5 +1,6 @@
 import { ReactNode, useState, createContext } from "react";
 import { DragEndEvent } from "@dnd-kit/core";
+import { useToast } from "@chakra-ui/react";
 
 import { CardType, LISTAS } from "@/types";
 import { useAuth } from "@/hooks";
@@ -33,6 +34,7 @@ export function KanbanContextProvider(props: KanbanContextProviderProps) {
   const [cards, setCards] = useState<Array<CardType>>([]);
   const [selectedCard, setSelectedCard] = useState<CardType | null>(null);
 
+  const toast = useToast();
   const { token } = useAuth();
 
   const getCard = (id: string) => cards.find((card) => card.id === id);
@@ -48,7 +50,18 @@ export function KanbanContextProvider(props: KanbanContextProviderProps) {
       resource: "cards",
       body: { titulo, conteudo, lista: LISTAS.todo },
       token,
-    }).then((data) => setCards([...cards, data]));
+    })
+      .then((data) => setCards([...cards, data]))
+      .catch((err) => {
+        toast({
+          title: "Erro ao criar card!",
+          description: err.message,
+          status: "error",
+          position: 'top-right',
+          duration: 5000,
+          isClosable: true,
+        });
+      });
   };
 
   const updateCard = (cardUpdated: CardType) => {
@@ -57,15 +70,26 @@ export function KanbanContextProvider(props: KanbanContextProviderProps) {
       resource: `cards/${cardUpdated.id}`,
       body: cardUpdated,
       token,
-    }).then((data) => {
-      const index = getCardIndex(data.id);
-      const _cards = [...cards];
+    })
+      .then((data) => {
+        const index = getCardIndex(data.id);
+        const _cards = [...cards];
 
-      _cards[index] = data;
+        _cards[index] = data;
 
-      setCards(_cards);
-      setSelectedCard(null);
-    });
+        setCards(_cards);
+        setSelectedCard(null);
+      })
+      .catch((err) => {
+        toast({
+          title: "Erro ao atualizar card!",
+          description: err.message,
+          status: "error",
+          position: 'top-right',
+          duration: 5000,
+          isClosable: true,
+        });
+      });
   };
 
   const deleteCard = (id: string) => {
@@ -73,7 +97,18 @@ export function KanbanContextProvider(props: KanbanContextProviderProps) {
       method: "DELETE",
       resource: `cards/${id}`,
       token,
-    }).then((data) => setCards(data));
+    })
+      .then((data) => setCards(data))
+      .catch((err) => {
+        toast({
+          title: "Erro ao apagar card!",
+          description: err.message,
+          status: "error",
+          position: 'top-right',
+          duration: 5000,
+          isClosable: true,
+        });
+      });
   };
 
   const moveCard = (props: { id: string; toList: string }) => {
@@ -85,14 +120,25 @@ export function KanbanContextProvider(props: KanbanContextProviderProps) {
         lista: props.toList,
       },
       token,
-    }).then((data) => {
-      const index = getCardIndex(data.id);
-      const _cards = [...cards];
+    })
+      .then((data) => {
+        const index = getCardIndex(data.id);
+        const _cards = [...cards];
 
-      _cards[index] = data;
+        _cards[index] = data;
 
-      setCards(_cards);
-    });
+        setCards(_cards);
+      })
+      .catch((err) => {
+        toast({
+          title: "Erro ao mover card!",
+          description: err.message,
+          status: "error",
+          position: 'top-right',
+          duration: 5000,
+          isClosable: true,
+        });
+      });
   };
 
   const handleDragEnd = (e: DragEndEvent) => {
@@ -111,14 +157,25 @@ export function KanbanContextProvider(props: KanbanContextProviderProps) {
         lista: container,
       },
       token,
-    }).then((data) => {
-      const index = getCardIndex(data.id);
-      const _cards = [...cards];
+    })
+      .then((data) => {
+        const index = getCardIndex(data.id);
+        const _cards = [...cards];
 
-      _cards[index] = data;
+        _cards[index] = data;
 
-      setCards(_cards);
-    });
+        setCards(_cards);
+      })
+      .catch((err) => {
+        toast({
+          title: "Erro ao mover card!",
+          description: err.message,
+          status: "error",
+          position: 'top-right',
+          duration: 5000,
+          isClosable: true,
+        });
+      });
   };
 
   return (
