@@ -84,7 +84,7 @@ export default function KanbanCard(props: KanbanCardProps) {
 
         <Flex border={`1px solid ${darkT100}`} borderRadius="8" width="100%" />
 
-        <MarkdownContainer content={conteudo} />
+        <MarkdownContainer conteudo={conteudo} />
       </Flex>
 
       <Flex
