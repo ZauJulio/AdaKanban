@@ -46,7 +46,17 @@ export function KanbanContextProvider(props: KanbanContextProviderProps) {
       resource: "cards",
       token,
     })
-      .then((data) => setCards(data))
+      .then((data) => {
+        if (data.length === 0 && process.env.NODE_ENV === "development") {
+          addCard({
+            titulo: "Hello World",
+            conteudo:
+              "## Adicione suas tasks : ]\n```js\nconst hello = 'Hello World!';\nconsole.log(hello);```",
+          });
+        } else {
+          setCards(data);
+        }
+      })
       .catch((err) => {
         toast({
           title: "Erro ao carregar cards!",
@@ -121,7 +131,10 @@ export function KanbanContextProvider(props: KanbanContextProviderProps) {
       resource: `cards/${id}`,
       token,
     })
-      .then((data) => setCards(data))
+      .then((data) => {
+        if (selectedCard?.id === id) setSelectedCard(null);
+        setCards(data);
+      })
       .catch((err) => {
         toast({
           title: "Erro ao apagar card!",
